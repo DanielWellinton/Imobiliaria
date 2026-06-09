@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/Core/">
+    <Project Path="Core/Core.csproj" Id="26a7d6a5-97e6-4671-9506-805b21801f7e" />
+  </Folder>
+  <Folder Name="/Infraestructure/">
+    <Project Path="Model/Model.csproj" Id="233a7b64-1152-42e3-aeb9-ac762ad6e842" />
+    <Project Path="Repository/Repository.csproj" Id="ae4c9815-b3f6-40cb-ba2a-780b8d1cffac" />
+  </Folder>
+  <Project Path="Imobiliaria/Imobiliaria.csproj" />
+</Solution>

@@ -1,0 +1,17 @@
+﻿@model List<Model.Imovel>
+@{
+    ViewData["Title"] = "Imóveis";
+}
+
+<a asp-controller="Imovel" asp-action="Create">Criar Novo Imóvel</a>
+
+<table>
+    <tr>
+        <td>Id</td>
+        <td>Titulo</td>
+        <td>Descrição</td>
+        <td>Categoria</td>
+        <td>Tipo de Negócio</td>
+        <td>Valor</td>
+    </tr>
+</table>
