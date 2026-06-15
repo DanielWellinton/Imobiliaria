@@ -24,6 +24,7 @@ namespace Repository
             _imovel.Valor = imovel.Valor;
             _imovel.Endereco = imovel.Endereco;
             _imovel.Especificacoes = imovel.Especificacoes;
+            _imovel.FotoUrl = imovel.FotoUrl;
         }
 
         public void Delete(Imovel imovel)

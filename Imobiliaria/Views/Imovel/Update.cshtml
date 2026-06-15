@@ -7,7 +7,7 @@
 <h1>Editar Imóvel</h1>
 <hr />
 
-<form asp-action="Update" method="post" class="row g-3 shadow p-4 rounded bg-light">
+<form asp-action="Update" method="post" class="row g-3 shadow p-4 rounded bg-light" enctype="multipart/form-data">
     <input type="hidden" asp-for="Id" />
     <input type="hidden" asp-for="Endereco.Id" />
 
@@ -40,7 +40,10 @@
         <label asp-for="Descricao" class="form-label">Descrição</label>
         <textarea asp-for="Descricao" class="form-control" rows="3" required></textarea>
     </div>
-
+    <div class="form-group">
+        <label>Foto do Imóvel:</label>
+        <input type="file" name="fotoArquivo" accept="image/*" class="form-control" />
+    </div>
     <h3 class="mt-4">Endereço</h3>
     <hr class="my-2" />
 

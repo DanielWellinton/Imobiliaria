@@ -12,5 +12,6 @@ namespace Model
         public float Valor { get; set; }
         public Endereco Endereco { get; set; }
         public string Especificacoes { get; set; }
+        public string? FotoUrl { get; set; }
     }
 }

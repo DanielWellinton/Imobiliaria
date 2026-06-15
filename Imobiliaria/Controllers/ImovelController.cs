@@ -1,20 +1,24 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Model;
 using Repository;
-using System.Reflection.Metadata.Ecma335;
-using static Core.Enums.Enums;
+using Microsoft.AspNetCore.Hosting; // Necessário para IWebHostEnvironment
+using Microsoft.AspNetCore.Http;    // Necessário para IFormFile
+using System.IO;
 
 namespace Imobiliaria.Controllers
 {
     public class ImovelController : Controller
     {
-        private ImovelRepository _imovelRepository;
-        private EnderecoRepository _enderecoRepository;
+        private readonly ImovelRepository _imovelRepository;
+        private readonly EnderecoRepository _enderecoRepository;
+        private readonly IWebHostEnvironment _environment; // Gerencia os caminhos do servidor (wwwroot)
 
-        public ImovelController()
+        // Atualizamos o construtor para receber o IWebHostEnvironment por injeção de dependência
+        public ImovelController(IWebHostEnvironment environment)
         {
             _imovelRepository = new ImovelRepository();
             _enderecoRepository = new EnderecoRepository();
+            _environment = environment;
         }
 
         public IActionResult Index(int? categoria, int? tipoNegocio, string busca, float? precoMin, float? precoMax)
@@ -35,23 +39,18 @@ namespace Imobiliaria.Controllers
         {
             if (imoveis == null) return new List<Imovel>();
 
-            // 1. Filtro por Categoria
             if (categoria.HasValue)
                 imoveis = imoveis.Where(x => (int)x.Categoria == categoria.Value).ToList();
 
-            // 2. Filtro por Tipo de Negócio (Finalidade)
             if (tipoNegocio.HasValue)
                 imoveis = imoveis.Where(x => (int)x.TipoNegocio == tipoNegocio.Value).ToList();
 
-            // 3. Filtro de Preço Mínimo
             if (precoMin.HasValue)
                 imoveis = imoveis.Where(x => x.Valor >= precoMin.Value).ToList();
 
-            // 4. Filtro de Preço Máximo
             if (precoMax.HasValue)
                 imoveis = imoveis.Where(x => x.Valor <= precoMax.Value).ToList();
 
-            // 5. Filtro por Texto Geral (Título, Descrição ou Cidade)
             if (!string.IsNullOrEmpty(busca))
             {
                 imoveis = imoveis.Where(x =>
@@ -81,14 +80,28 @@ namespace Imobiliaria.Controllers
             return View(new Imovel());
         }
 
+        // ADICIONADO: Parâmetro IFormFile fotoArquivo para receber a imagem do formulário
         [HttpPost]
-        public IActionResult Create(Imovel imovel)
+        public async Task<IActionResult> Create(Imovel imovel, IFormFile fotoArquivo)
         {
             if (imovel is null)
                 return View(imovel);
-            _enderecoRepository.Create(imovel.Endereco);
-            _imovelRepository.Create(imovel);
-            return RedirectToAction(nameof(Index));
+
+            if (ModelState.IsValid)
+            {
+                // Processa o upload da foto se ela existir
+                if (fotoArquivo != null && fotoArquivo.Length > 0)
+                {
+                    string nomeUnicoFoto = await SalvarFotoServidor(fotoArquivo);
+                    imovel.FotoUrl = "/imagens/imoveis/" + nomeUnicoFoto; // Certifique-se que o seu Model possui a propriedade string FotoUrl
+                }
+
+                _enderecoRepository.Create(imovel.Endereco);
+                _imovelRepository.Create(imovel);
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(imovel);
         }
 
         public IActionResult Delete(int id)
@@ -108,6 +121,7 @@ namespace Imobiliaria.Controllers
             var imovel = _imovelRepository.GetById(id);
             if (imovel is null)
                 return NotFound();
+
             _imovelRepository.Delete(imovel);
             return RedirectToAction(nameof(Index));
         }
@@ -122,16 +136,57 @@ namespace Imobiliaria.Controllers
             return View(imovel);
         }
 
+        // ADICIONADO: Parâmetro IFormFile fotoArquivo para atualizar a foto se o usuário enviar uma nova
         [HttpPost]
-        public IActionResult Update(int id, Imovel imovel)
+        public async Task<IActionResult> Update(int id, Imovel imovel, IFormFile fotoArquivo)
         {
-            if (id <= 0)
+            if (id <= 0 || imovel is null)
                 return BadRequest();
-            if (imovel is null)
-                return BadRequest();
-            _enderecoRepository.Update(imovel.Endereco);
-            _imovelRepository.Update(imovel);
-            return RedirectToAction(nameof(Index));
+
+            if (ModelState.IsValid)
+            {
+                if (fotoArquivo != null && fotoArquivo.Length > 0)
+                {
+                    string nomeUnicoFoto = await SalvarFotoServidor(fotoArquivo);
+                    imovel.FotoUrl = "/imagens/imoveis/" + nomeUnicoFoto;
+                }
+                else
+                {
+                    // Mantém a foto antiga caso o usuário não tenha enviado uma nova no formulário de edição
+                    var imovelAntigo = _imovelRepository.GetById(id);
+                    if (imovelAntigo != null)
+                    {
+                        imovel.FotoUrl = imovelAntigo.FotoUrl;
+                    }
+                }
+
+                _enderecoRepository.Update(imovel.Endereco);
+                _imovelRepository.Update(imovel);
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(imovel);
+        }
+
+        // Método auxiliar privado para evitar repetição de código no Create e Update
+        private async Task<string> SalvarFotoServidor(IFormFile arquivo)
+        {
+            string extensao = Path.GetExtension(arquivo.FileName);
+            string nomeUnico = Guid.NewGuid().ToString() + extensao;
+
+            string pastaDestino = Path.Combine(_environment.WebRootPath, "imagens", "imoveis");
+
+            if (!Directory.Exists(pastaDestino))
+                Directory.CreateDirectory(pastaDestino);
+
+            string caminhoCompletoArquivo = Path.Combine(pastaDestino, nomeUnico);
+
+            using (var stream = new FileStream(caminhoCompletoArquivo, FileMode.Create))
+            {
+                await arquivo.CopyToAsync(stream);
+            }
+
+            return nomeUnico;
         }
     }
 }

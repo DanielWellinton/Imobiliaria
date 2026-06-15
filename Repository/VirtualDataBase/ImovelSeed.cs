@@ -20,9 +20,9 @@ namespace Repository.VirtualDataBase
             var enderecos = new List<Endereco>
         {
             new Endereco(0, "Av. Paulista", "Bela Vista", "São Paulo", Enums.EstadoFederativo.SP, "01311-200", 1200, "Apto 142 - Bloco B"),
-            new Endereco(0, "Rua das Flores", "Centro", "Gramado", Enums.EstadoFederativo.RS, "95670-000", 350, null),
+            new Endereco(0, "Rua das Flores", "Centro", "Gramado", Enums.EstadoFederativo.RS, "95670-000", 350, "Casa"),
             new Endereco(0, "Av. Atlântica", "Copacabana", "Rio de Janeiro", Enums.EstadoFederativo.RJ, "22021-001", 2500, "Cobertura"),
-            new Endereco(0, "Rodovia BR-282, Km 45", "Zona Rural", "Lages", Enums.EstadoFederativo.SC, "88500-000", null, "Sítio São José"),
+            new Endereco(0, "Rodovia BR-282, Km 45", "Zona Rural", "Lages", Enums.EstadoFederativo.SC, "88500-000", 0, "Sítio São José"),
             new Endereco(0, "Rua Amélia", "Graças", "Recife", Enums.EstadoFederativo.PE, "52011-050", 410, "Sala 302 - Empresarial")
         };
 

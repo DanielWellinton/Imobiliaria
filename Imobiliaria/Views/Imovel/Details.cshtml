@@ -13,6 +13,18 @@
 
     <div class="row g-5">
         <div class="col-lg-7">
+            
+            <div class="mb-4 position-relative overflow-hidden rounded shadow" style="max-height: 450px;">
+                @if (!string.IsNullOrEmpty(Model.FotoUrl))
+                {
+                    <img src="@Model.FotoUrl" class="img-fluid w-100 object-fit-cover" alt="Foto de @Model.Titulo" style="height: 450px; object-fit: cover;">
+                }
+                else
+                {
+                    <img src="https://placehold.co/600x400/f8f9fa/6c757d?text=Imagem+Indisponivel" class="card-img-top w-100 h-100 object-fit-cover" alt="Imóvel sem foto">
+                }
+            </div>
+
             <div class="d-flex align-items-center gap-2 mb-2">
                 <span class="badge @(Model.TipoNegocio.ToString() == "Aluguel" ? "bg-success" : "bg-info text-dark") fs-6 px-3 py-1">
                     @Model.TipoNegocio
@@ -86,8 +98,8 @@
 
                     <div class="d-grid gap-2">
                         <a href="https://wa.me/554999675049?text=Olá! Tenho interesse no imóvel ID @Model.Id (@Model.Titulo)"
-                           target="_blank"
-                           class="btn btn-light btn-lg fw-bold text-primary shadow-sm">
+                               target="_blank"
+                               class="btn btn-light btn-lg fw-bold text-primary shadow-sm">
                             <i class="bi bi-whatsapp"></i> Conversar no WhatsApp
                         </a>
                         <button class="btn btn-outline-light btn-sm mt-2" onclick="alert('Solicitação enviada! Entraremos em contato em breve.')">
