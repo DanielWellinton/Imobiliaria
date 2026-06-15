@@ -40,9 +40,26 @@
         <label asp-for="Descricao" class="form-label">Descrição</label>
         <textarea asp-for="Descricao" class="form-control" rows="3" required></textarea>
     </div>
-    <div class="form-group">
-        <label>Foto do Imóvel:</label>
-        <input type="file" name="fotoArquivo" accept="image/*" class="form-control" />
+    <div class="form-group col-12 my-3">
+        <input type="hidden" asp-for="FotoUrl" />
+
+        <label class="form-label d-block fw-bold">Foto Atual:</label>
+    
+        @if (!string.IsNullOrEmpty(Model.FotoUrl))
+        {
+            <div class="mb-3">
+                <img src="@Model.FotoUrl" alt="Foto do Imóvel" class="img-thumbnail" style="max-height: 200px; object-fit: cover;" />
+            </div>
+        }
+        else
+        {
+            <div class="mb-3 text-muted">
+                <small>Nenhuma foto cadastrada para este imóvel.</small>
+            </div>
+        }
+
+        <label for="fotoArquivo" class="form-label">Selecionar Nova Foto (Deixe em branco para manter a atual):</label>
+        <input type="file" name="fotoArquivo" id="fotoArquivo" accept="image/*" class="form-control" />
     </div>
     <h3 class="mt-4">Endereço</h3>
     <hr class="my-2" />

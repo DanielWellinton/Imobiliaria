@@ -80,7 +80,6 @@ namespace Imobiliaria.Controllers
             return View(new Imovel());
         }
 
-        // ADICIONADO: Parâmetro IFormFile fotoArquivo para receber a imagem do formulário
         [HttpPost]
         public async Task<IActionResult> Create(Imovel imovel, IFormFile fotoArquivo)
         {
@@ -89,19 +88,16 @@ namespace Imobiliaria.Controllers
 
             if (ModelState.IsValid)
             {
-                // Processa o upload da foto se ela existir
                 if (fotoArquivo != null && fotoArquivo.Length > 0)
                 {
                     string nomeUnicoFoto = await SalvarFotoServidor(fotoArquivo);
-                    imovel.FotoUrl = "/imagens/imoveis/" + nomeUnicoFoto; // Certifique-se que o seu Model possui a propriedade string FotoUrl
+                    imovel.FotoUrl = "/imagens/imoveis/" + nomeUnicoFoto;
                 }
-
-                _enderecoRepository.Create(imovel.Endereco);
-                _imovelRepository.Create(imovel);
-                return RedirectToAction(nameof(Index));
             }
 
-            return View(imovel);
+            _enderecoRepository.Create(imovel.Endereco);
+            _imovelRepository.Create(imovel);
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Delete(int id)
@@ -136,7 +132,6 @@ namespace Imobiliaria.Controllers
             return View(imovel);
         }
 
-        // ADICIONADO: Parâmetro IFormFile fotoArquivo para atualizar a foto se o usuário enviar uma nova
         [HttpPost]
         public async Task<IActionResult> Update(int id, Imovel imovel, IFormFile fotoArquivo)
         {
@@ -152,23 +147,19 @@ namespace Imobiliaria.Controllers
                 }
                 else
                 {
-                    // Mantém a foto antiga caso o usuário não tenha enviado uma nova no formulário de edição
                     var imovelAntigo = _imovelRepository.GetById(id);
                     if (imovelAntigo != null)
                     {
                         imovel.FotoUrl = imovelAntigo.FotoUrl;
                     }
                 }
-
-                _enderecoRepository.Update(imovel.Endereco);
-                _imovelRepository.Update(imovel);
-                return RedirectToAction(nameof(Index));
             }
 
-            return View(imovel);
+            _enderecoRepository.Update(imovel.Endereco);
+            _imovelRepository.Update(imovel);
+            return RedirectToAction(nameof(Index));
         }
 
-        // Método auxiliar privado para evitar repetição de código no Create e Update
         private async Task<string> SalvarFotoServidor(IFormFile arquivo)
         {
             string extensao = Path.GetExtension(arquivo.FileName);
