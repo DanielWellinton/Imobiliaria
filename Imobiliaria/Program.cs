@@ -1,3 +1,5 @@
+using Repository.VirtualDataBase;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -20,9 +22,10 @@ app.UseAuthorization();
 
 app.MapStaticAssets();
 
+ImovelSeed.SeedData();
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
+    pattern: "{controller=Imovel}/{action=Catalogo}/{id?}")
     .WithStaticAssets();
 
 

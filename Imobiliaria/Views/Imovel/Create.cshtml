@@ -1,0 +1,84 @@
+﻿@model Model.Imovel
+
+@{
+    ViewData["Title"] = "Cadastrar Imóvel";
+}
+
+<h1>Cadastrar Novo Imóvel</h1>
+<hr />
+
+<form asp-action="Create" method="post" class="row g-3 shadow p-4 rounded bg-light">
+
+    <div class="col-md-6">
+        <label asp-for="Titulo" class="form-label">Título</label>
+        <input asp-for="Titulo" class="form-control" required />
+    </div>
+
+    <div class="col-md-3">
+        <label asp-for="Categoria" class="form-label">Categoria</label>
+        <select asp-for="Categoria" class="form-select" asp-items="Html.GetEnumSelectList<Core.Enums.Enums.Categoria>()"></select>
+    </div>
+
+    <div class="col-md-3">
+        <label asp-for="TipoNegocio" class="form-label">Tipo de Negócio</label>
+        <select asp-for="TipoNegocio" class="form-select" asp-items="Html.GetEnumSelectList<Core.Enums.Enums.TipoNegocio>()"></select>
+    </div>
+
+    <div class="col-md-4">
+        <label asp-for="Valor" class="form-label">Valor (R$)</label>
+        <input asp-for="Valor" type="number" step="0.01" class="form-control" required />
+    </div>
+
+    <div class="col-md-8">
+        <label asp-for="Especificacoes" class="form-label">Especificações</label>
+        <input asp-for="Especificacoes" class="form-control" placeholder="Ex: 3 quartos, 2 banheiros..." />
+    </div>
+
+    <div class="col-12">
+        <label asp-for="Descricao" class="form-label">Descrição</label>
+        <textarea asp-for="Descricao" class="form-control" rows="3" required></textarea>
+    </div>
+
+    <h3 class="mt-4">Endereço</h3>
+    <hr class="my-2" />
+
+    <div class="col-md-3">
+        <label asp-for="Endereco.Cep" class="form-label">CEP</label>
+        <input asp-for="Endereco.Cep" class="form-control" required />
+    </div>
+
+    <div class="col-md-6">
+        <label asp-for="Endereco.Rua" class="form-label">Rua</label>
+        <input asp-for="Endereco.Rua" class="form-control" required />
+    </div>
+
+    <div class="col-md-3">
+        <label asp-for="Endereco.Numero" class="form-label">Número</label>
+        <input asp-for="Endereco.Numero" type="number" class="form-control" />
+    </div>
+
+    <div class="col-md-4">
+        <label asp-for="Endereco.Complemento" class="form-label">Complemento</label>
+        <input asp-for="Endereco.Complemento" class="form-control" />
+    </div>
+
+    <div class="col-md-3">
+        <label asp-for="Endereco.Bairro" class="form-label">Bairro</label>
+        <input asp-for="Endereco.Bairro" class="form-control" required />
+    </div>
+
+    <div class="col-md-3">
+        <label asp-for="Endereco.Cidade" class="form-label">Cidade</label>
+        <input asp-for="Endereco.Cidade" class="form-control" required />
+    </div>
+
+    <div class="col-md-2">
+        <label asp-for="Endereco.Estado" class="form-label">Estado (UF)</label>
+        <select asp-for="Endereco.Estado" class="form-select" asp-items="Html.GetEnumSelectList<Core.Enums.Enums.EstadoFederativo>()"></select>
+    </div>
+
+    <div class="col-12 mt-4">
+        <button type="submit" class="btn btn-success">Salvar Imóvel</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>

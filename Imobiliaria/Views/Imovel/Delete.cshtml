@@ -1,0 +1,44 @@
+﻿@model Model.Imovel
+
+@{
+    ViewData["Title"] = "Excluir Imóvel";
+}
+
+<div class="alert alert-danger shadow p-4 mt-3" role="alert">
+    <h4 class="alert-heading">Atenção! Você está prestes a excluir um registro.</h4>
+    <p>Tem certeza de que deseja excluir permanentemente o imóvel listado abaixo? Essa ação não poderá ser desfeita.</p>
+</div>
+
+<div class="card shadow bg-light mb-4">
+    <div class="card-header bg-dark text-white">
+        <h3>@Model.Titulo</h3>
+    </div>
+    <div class="card-body row">
+        <div class="col-md-6">
+            <p><strong>Categoria:</strong> @Model.Categoria</p>
+            <p><strong>Tipo de Negócio:</strong> @Model.TipoNegocio</p>
+            <p><strong>Valor:</strong> @Model.Valor.ToString("C")</p>
+            <p><strong>Especificações:</strong> @Model.Especificacoes</p>
+            <p><strong>Descrição:</strong> @Model.Descricao</p>
+        </div>
+        <div class="col-md-6 border-start">
+            <h5>Endereço cadastrado:</h5>
+            @if (Model.Endereco != null)
+            {
+                <p>@Model.Endereco.Rua, Nº @(Model.Endereco.Numero?.ToString() ?? "S/N")</p>
+                <p>@Model.Endereco.Complemento</p>
+                <p>@Model.Endereco.Bairro - @Model.Endereco.Cidade / @Model.Endereco.Estado</p>
+                <p><strong>CEP:</strong> @Model.Endereco.Cep</p>
+            }
+            else
+            {
+                <p class="text-muted">Nenhum endereço associado.</p>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="mb-5">
+    <a asp-action="ConfirmDelete" asp-route-id="@Model.Id" class="btn btn-danger px-4 me-2">Confirmar Exclusão</a>
+    <a asp-action="Index" class="btn btn-secondary px-4">Voltar</a>
+</div>

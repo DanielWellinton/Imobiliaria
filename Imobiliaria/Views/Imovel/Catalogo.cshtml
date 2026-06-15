@@ -1,0 +1,129 @@
+﻿@model IEnumerable<Model.Imovel>
+
+@{
+    ViewData["Title"] = "Portal de Imóveis";
+}
+
+<div class="container my-4">
+    <div class="row text-center mb-4">
+        <h1 class="display-5 fw-bold text-primary">Encontre o Imóvel dos Seus Sonhos</h1>
+        <p class="lead text-muted">Filtre por categoria, tipo de negócio ou localização.</p>
+    </div>
+
+    <div class="card shadow-sm border-0 mb-4 bg-light">
+        <div class="card-body">
+            <form method="get" asp-action="Catalogo" class="row g-3 align-items-end">
+                <div class="col-md-2">
+                    <label class="form-label fw-semibold text-secondary">O que você busca?</label>
+                    <select name="tipoNegocio" class="form-select">
+                        <option value="">Todos os Negócios</option>
+                        @foreach (var item in Html.GetEnumSelectList<Core.Enums.Enums.TipoNegocio>())
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <label class="form-label fw-semibold text-secondary">Tipo de Imóvel</label>
+                    <select name="categoria" class="form-select">
+                        <option value="">Todas as Categorias</option>
+                        @foreach (var item in Html.GetEnumSelectList<Core.Enums.Enums.Categoria>())
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <label class="form-label fw-semibold text-secondary">Preço Mínimo</label>
+                    <input type="number" name="precoMin" class="form-control" placeholder="R$ Mín" step="0.01" />
+                </div>
+
+                <div class="col-md-2">
+                    <label class="form-label fw-semibold text-secondary">Preço Máximo</label>
+                    <input type="number" name="precoMax" class="form-control" placeholder="R$ Máx" step="0.01" />
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold text-secondary">Cidade ou Palavra-chave</label>
+                    <input type="text" name="busca" class="form-control" placeholder="Ex: São Paulo, Centro..." />
+                </div>
+
+                <div class="col-md-1 d-grid">
+                    <button type="submit" class="btn btn-primary fw-bold">Buscar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        @if (!Model.Any())
+        {
+            <div class="col-12 text-center py-5">
+                <h3 class="text-muted">Nenhum imóvel corresponde aos critérios de busca.</h3>
+            </div>
+        }
+        else
+        {
+            @foreach (var item in Model)
+            {
+                <div class="col">
+                    <div class="card h-100 shadow-sm border-0 hover-shadow transition">
+                        <div class="position-absolute top-0 start-0 m-3">
+                            <span class="badge @(item.TipoNegocio.ToString() == "Aluguel" ? "bg-success" : "bg-info text-dark") fs-6 px-3 py-2 shadow-sm">
+                                @item.TipoNegocio
+                            </span>
+                        </div>
+
+                        <div class="card-body pt-5">
+                            <span class="text-uppercase text-muted small fw-bold">@item.Categoria</span>
+                            <h5 class="card-title fw-bold mt-1 text-dark">@item.Titulo</h5>
+
+                            <p class="card-text text-muted text-truncate-2" style="font-size: 0.9rem;">
+                                @item.Descricao
+                            </p>
+
+                            <div class="mb-3">
+                                <span class="text-muted small d-block"><i class="bi bi-geo-alt-fill"></i> Localização:</span>
+                                <strong class="text-secondary">
+                                    @(item.Endereco != null ? $"{item.Endereco.Cidade} - {item.Endereco.Estado}" : "Consultar localização")
+                                </strong>
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(item.Especificacoes))
+                            {
+                                <div class="p-2 bg-light rounded mb-3 small text-muted">
+                                    <strong>Especificações:</strong> @item.Especificacoes
+                                </div>
+                            }
+                        </div>
+
+                        <div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center pb-3">
+                            <h4 class="text-primary fw-bold m-0">@item.Valor.ToString("C")</h4>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-primary btn-sm rounded-pill px-3">Ver Detalhes</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+<style>
+    .hover-shadow:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 .5rem 1.5rem rgba(0,0,0,.15) !important;
+    }
+
+    .transition {
+        transition: all 0.3s ease-in-out;
+    }
+
+    .text-truncate-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+</style>

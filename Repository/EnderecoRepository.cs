@@ -42,15 +42,15 @@ namespace Repository
 
         private int GetNextId()
         {
-            int maxId = 1;
-            foreach (var endereco in MyData.Enderecos)
+            int maxId = 0;
+            foreach (var imovel in MyData.Imoveis)
             {
-                if (endereco.Id > maxId)
+                if (imovel.Id > maxId)
                 {
-                    maxId = endereco.Id;
+                    maxId = imovel.Id;
                 }
             }
-            return maxId;
+            return ++maxId;
         }
     }
 }

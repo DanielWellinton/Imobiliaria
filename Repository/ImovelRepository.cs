@@ -48,7 +48,7 @@ namespace Repository
 
         private int GetNextId()
         {
-            int maxId = 1;
+            int maxId = 0;
             foreach (var imovel in MyData.Imoveis)
             {
                 if (imovel.Id > maxId)
@@ -56,7 +56,7 @@ namespace Repository
                     maxId = imovel.Id;
                 }
             }
-            return maxId;
+            return ++maxId;
         }
     }
 }

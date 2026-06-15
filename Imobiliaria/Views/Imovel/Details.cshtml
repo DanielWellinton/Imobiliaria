@@ -1,0 +1,101 @@
+﻿@model Model.Imovel
+
+@{
+    ViewData["Title"] = Model.Titulo;
+}
+
+<div class="container my-5">
+    <div class="mb-4">
+        <a asp-action="Catalogo" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
+            <i class="bi bi-arrow-left"></i> Voltar para o Catálogo
+        </a>
+    </div>
+
+    <div class="row g-5">
+        <div class="col-lg-7">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <span class="badge @(Model.TipoNegocio.ToString() == "Aluguel" ? "bg-success" : "bg-info text-dark") fs-6 px-3 py-1">
+                    @Model.TipoNegocio
+                </span>
+                <span class="badge bg-secondary fs-6 px-3 py-1">@Model.Categoria</span>
+            </div>
+
+            <h1 class="display-5 fw-bold text-dark mb-3">@Model.Titulo</h1>
+
+            <h3 class="text-primary fw-bold display-6 mb-4">
+                @Model.Valor.ToString("C")
+                @if (Model.TipoNegocio.ToString() == "Aluguel")
+                {
+                    <span class="fs-5 text-muted fw-normal">/ mês</span>
+                }
+            </h3>
+
+            <hr />
+
+            <div class="my-4">
+                <h4 class="fw-bold text-secondary mb-3">Descrição do Imóvel</h4>
+                <p class="text-muted lh-lg" style="text-align: justify;">
+                    @Model.Descricao
+                </p>
+            </div>
+
+            <hr />
+
+            @if (!string.IsNullOrEmpty(Model.Especificacoes))
+            {
+                <div class="my-4">
+                    <h4 class="fw-bold text-secondary mb-3">Características</h4>
+                    <div class="p-3 bg-light rounded shadow-sm border-start border-4 border-primary">
+                        <p class="m-0 text-dark fw-semibold">@Model.Especificacoes</p>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="col-lg-5">
+            <div class="card shadow-sm border-0 bg-light mb-4">
+                <div class="card-body p-4">
+                    <h4 class="card-title fw-bold text-dark mb-3">
+                        <i class="bi bi-geo-alt-fill text-danger"></i> Localização
+                    </h4>
+
+                    @if (Model.Endereco != null)
+                    {
+                        <ul class="list-unstyled m-0 fs-6 text-secondary">
+                            <li class="mb-2"><strong>Rua:</strong> @Model.Endereco.Rua, Nº @(Model.Endereco.Numero?.ToString() ?? "S/N")</li>
+                            @if (!string.IsNullOrEmpty(Model.Endereco.Complemento))
+                            {
+                                <li class="mb-2"><strong>Complemento:</strong> @Model.Endereco.Complemento</li>
+                            }
+                            <li class="mb-2"><strong>Bairro:</strong> @Model.Endereco.Bairro</li>
+                            <li class="mb-2"><strong>Cidade:</strong> @Model.Endereco.Cidade - @Model.Endereco.Estado</li>
+                            <li><strong>CEP:</strong> @Model.Endereco.Cep</li>
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-muted m-0">Endereço sob consulta com nossos corretores.</p>
+                    }
+                </div>
+            </div>
+
+            <div class="card shadow border-0 bg-primary text-white text-center p-4">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">Gostou deste imóvel?</h5>
+                    <p class="small mb-4">Entre em contato agora mesmo para agendar uma visita com um de nossos corretores especialistas.</p>
+
+                    <div class="d-grid gap-2">
+                        <a href="https://wa.me/554999675049?text=Olá! Tenho interesse no imóvel ID @Model.Id (@Model.Titulo)"
+                           target="_blank"
+                           class="btn btn-light btn-lg fw-bold text-primary shadow-sm">
+                            <i class="bi bi-whatsapp"></i> Conversar no WhatsApp
+                        </a>
+                        <button class="btn btn-outline-light btn-sm mt-2" onclick="alert('Solicitação enviada! Entraremos em contato em breve.')">
+                            Tenho Interesse
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
