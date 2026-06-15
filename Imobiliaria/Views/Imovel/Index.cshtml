@@ -12,18 +12,13 @@
     <a asp-action="Create" class="btn btn-success fw-bold px-4">+ Novo Imóvel</a>
 </div>
 
-<div class="card shadow-sm border-start border-4 border-dark mb-4">
+<div class="card shadow-sm border-start border-4 border-dark mb-4 bg-light">
     <div class="card-body py-3">
         <form method="get" asp-action="Index" class="row g-2 align-items-end">
-            <div class="col-md-2">
-                <label class="form-label small fw-bold m-1">Categoria</label>
-                <select name="categoria" class="form-select form-select-sm">
-                    <option value="">Todas</option>
-                    @foreach (var item in Html.GetEnumSelectList<Core.Enums.Enums.Categoria>())
-                    {
-                        <option value="@item.Value">@item.Text</option>
-                    }
-                </select>
+
+            <div class="col-md-3">
+                <label class="form-label small fw-bold m-1">Pesquisar por texto</label>
+                <input type="text" name="busca" value="@Context.Request.Query["busca"]" class="form-control form-control-sm" placeholder="Título, descrição ou cidade..." />
             </div>
 
             <div class="col-md-2">
@@ -32,30 +27,37 @@
                     <option value="">Todos</option>
                     @foreach (var item in Html.GetEnumSelectList<Core.Enums.Enums.TipoNegocio>())
                     {
-                        <option value="@item.Value">@item.Text</option>
+                        <option value="@item.Value" selected="@(Context.Request.Query["tipoNegocio"] == item.Value)">@item.Text</option>
+                    }
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <label class="form-label small fw-bold m-1">Categoria</label>
+                <select name="categoria" class="form-select form-select-sm">
+                    <option value="">Todas</option>
+                    @foreach (var item in Html.GetEnumSelectList<Core.Enums.Enums.Categoria>())
+                    {
+                        <option value="@item.Value" selected="@(Context.Request.Query["categoria"] == item.Value)">@item.Text</option>
                     }
                 </select>
             </div>
 
             <div class="col-md-2">
                 <label class="form-label small fw-bold m-1">Preço Mínimo</label>
-                <input type="number" name="precoMin" class="form-control form-select-sm" placeholder="R$ Mín" step="0.01" />
+                <input type="number" name="precoMin" value="@Context.Request.Query["precoMin"]" class="form-control form-control-sm" placeholder="R$ Mín" step="0.01" />
             </div>
 
             <div class="col-md-2">
                 <label class="form-label small fw-bold m-1">Preço Máximo</label>
-                <input type="number" name="precoMax" class="form-control form-select-sm" placeholder="R$ Máx" step="0.01" />
-            </div>
-
-            <div class="col-md-3">
-                <label class="form-label small fw-bold m-1">Pesquisar por título</label>
-                <input type="text" name="busca" class="form-control form-select-sm" placeholder="Digite o título..." />
+                <input type="number" name="precoMax" value="@Context.Request.Query["precoMax"]" class="form-control form-control-sm" placeholder="R$ Máx" step="0.01" />
             </div>
 
             <div class="col-md-1 d-flex gap-1">
                 <button type="submit" class="btn btn-dark btn-sm w-100 fw-bold">Filtrar</button>
                 <a asp-action="Index" class="btn btn-outline-secondary btn-sm" title="Limpar Filtros">↺</a>
             </div>
+
         </form>
     </div>
 </div>
