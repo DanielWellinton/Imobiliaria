@@ -3,6 +3,7 @@ namespace Model
 {
     public class Endereco
     {
+        #region Propriedades
         public int Id { get; set; }
         public string Rua { get; set; }
         public string Bairro { get; set; }
@@ -11,7 +12,8 @@ namespace Model
         public string Cep { get; set; }
         public int? Numero { get; set; }
         public string Complemento { get; set; }
-
+        #endregion
+        #region Construtores
         public Endereco()
         {
         }
@@ -36,5 +38,6 @@ namespace Model
             Numero = numero;
             Complemento = complemento;
         }
+        #endregion
     }
 }
